@@ -1,43 +1,20 @@
+/* options.css */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 10px;
-  width: 300px;
   background-color: #f9f9f9;
 }
 
 #container {
   display: flex;
   flex-direction: column;
-}
-
-#header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 10px;
 }
 
 h1 {
-  font-size: 18px;
+  font-size: 24px;
   text-align: center;
-}
-
-#settingsIcon {
-  font-size: 12px;
-  cursor: pointer;
-}
-
-button {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
 }
 
 #groupsContainer {
@@ -53,27 +30,35 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px;
+  padding: 10px;
   margin: 5px 0;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.action-buttons {
-  display: flex;
-  gap: 5px;
+#groupsList input {
+  margin-right: 10px;
 }
 
 #groupsList button {
-  background-color: #ff4d4d;
-  border: none;
-  border-radius: 3px;
-  color: white;
-  cursor: pointer;
-  padding: 3px 5px;
+  margin-left: 5px;
 }
 
-#groupsList button:hover {
-  background-color: #cc0000;
+input {
+  border: none;
+  outline: none;
+}
+
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
 }

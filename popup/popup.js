@@ -1,3 +1,7 @@
+document.getElementById("settingsIcon").addEventListener("click", () => {
+  chrome.tabs.create({ url: "options/options.html" });
+});
+
 document.getElementById("saveTabsButton").addEventListener("click", async () => {
   const groupName = prompt("Enter a name for this group:");
   if (!groupName) return;
