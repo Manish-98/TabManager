@@ -44,9 +44,13 @@ function loadGroups() {
   }
   
   // Open all tabs in a group
-  function openGroup(tabs) {
+  async function openGroup(tabs) {
+    const openTabs = await chrome.tabs.query({});
+
     tabs.forEach(tab => {
-      chrome.tabs.create({ url: tab.url });
+      if(!openTabs.some(openTab => openTab.url === tab.url)) {
+        chrome.tabs.create({ url: tab.url });
+      }
     });
   }
   
