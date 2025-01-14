@@ -16,58 +16,58 @@ document.getElementById("saveTabsButton").addEventListener("click", async () => 
 });
 
 function loadGroups() {
-    chrome.storage.local.get("tabGroups", (data) => {
-      const groupsList = document.getElementById("groupsList");
-      groupsList.innerHTML = ""; // Clear existing list
-  
-      const tabGroups = data.tabGroups || [];
-      tabGroups.forEach((group, index) => {
-        const listItem = document.createElement("li");
-  
-        const groupName = document.createElement("span");
-        groupName.textContent = group.name;
-  
-        const openButton = document.createElement("button");
-        openButton.textContent = "Open";
-        openButton.addEventListener("click", () => openGroup(group.tabs));
-  
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", () => deleteGroup(index));
+  chrome.storage.local.get("tabGroups", (data) => {
+    const groupsList = document.getElementById("groupsList");
+    groupsList.innerHTML = ""; // Clear existing list
 
-        const actionButtons = document.createElement("div");
-        actionButtons.className = "action-buttons";
-        actionButtons.appendChild(openButton);
-        actionButtons.appendChild(deleteButton);
-  
-        listItem.appendChild(groupName);
-        listItem.appendChild(actionButtons);
-        groupsList.appendChild(listItem);
-      });
-    });
-  }
-  
-  // Open all tabs in a group
-  async function openGroup(tabs) {
-    const openTabs = await chrome.tabs.query({});
+    const tabGroups = data.tabGroups || [];
+    tabGroups.forEach((group, index) => {
+      const listItem = document.createElement("li");
 
-    tabs.forEach(tab => {
-      if(!openTabs.some(openTab => openTab.url === tab.url)) {
-        chrome.tabs.create({ url: tab.url });
-      }
+      const groupName = document.createElement("span");
+      groupName.textContent = group.name;
+
+      const openButton = document.createElement("button");
+      openButton.textContent = "Open";
+      openButton.addEventListener("click", () => openGroup(group.tabs));
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", () => deleteGroup(index));
+
+      const actionButtons = document.createElement("div");
+      actionButtons.className = "action-buttons";
+      actionButtons.appendChild(openButton);
+      actionButtons.appendChild(deleteButton);
+
+      listItem.appendChild(groupName);
+      listItem.appendChild(actionButtons);
+      groupsList.appendChild(listItem);
     });
-  }
-  
-  // Delete a group
-  function deleteGroup(index) {
-    chrome.storage.local.get("tabGroups", (data) => {
-      const tabGroups = data.tabGroups || [];
-      tabGroups.splice(index, 1);
-      chrome.storage.local.set({ tabGroups }, () => {
-        loadGroups(); // Refresh the list
-      });
+  });
+}
+
+// Open all tabs in a group
+async function openGroup(tabs) {
+  const openTabs = await chrome.tabs.query({});
+
+  tabs.forEach(tab => {
+    if (!openTabs.some(openTab => openTab.url === tab.url)) {
+      chrome.tabs.create({ url: tab.url });
+    }
+  });
+}
+
+// Delete a group
+function deleteGroup(index) {
+  chrome.storage.local.get("tabGroups", (data) => {
+    const tabGroups = data.tabGroups || [];
+    tabGroups.splice(index, 1);
+    chrome.storage.local.set({ tabGroups }, () => {
+      loadGroups(); // Refresh the list
     });
-  }
-  
-  // Load groups on popup open
-  loadGroups();
+  });
+}
+
+// Load groups on popup open
+loadGroups();
