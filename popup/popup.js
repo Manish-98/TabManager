@@ -34,10 +34,14 @@ function loadGroups() {
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.addEventListener("click", () => deleteGroup(index));
+
+        const actionButtons = document.createElement("div");
+        actionButtons.className = "action-buttons";
+        actionButtons.appendChild(openButton);
+        actionButtons.appendChild(deleteButton);
   
         listItem.appendChild(groupName);
-        listItem.appendChild(openButton);
-        listItem.appendChild(deleteButton);
+        listItem.appendChild(actionButtons);
         groupsList.appendChild(listItem);
       });
     });

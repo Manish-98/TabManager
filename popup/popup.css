@@ -50,6 +50,11 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
   }
+
+  .action-buttons {
+    display: flex;
+    gap: 5px;
+  }
   
   #groupsList button {
     background-color: #ff4d4d;
