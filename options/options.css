@@ -28,13 +28,25 @@ h1 {
 
 #groupsList li {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   padding: 10px;
   margin: 5px 0;
+  gap: 10px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+#groupsList li div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+#groupsList li .tabs {
+  justify-content: space-between;
+  align-items: center;
 }
 
 #groupsList input {

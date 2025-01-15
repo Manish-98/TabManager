@@ -1,4 +1,3 @@
-// Load groups and display them
 function loadGroups() {
     chrome.storage.local.get("tabGroups", (data) => {
         const groupsList = document.getElementById("groupsList");
@@ -7,6 +6,7 @@ function loadGroups() {
         const tabGroups = data.tabGroups || [];
         tabGroups.forEach((group, index) => {
             const listItem = document.createElement("li");
+            const groupHeader = document.createElement("div");
 
             const groupNameInput = document.createElement("input");
             groupNameInput.type = "text";
@@ -17,11 +17,37 @@ function loadGroups() {
             deleteButton.textContent = "Delete";
             deleteButton.addEventListener("click", () => deleteGroup(index));
 
-            listItem.appendChild(groupNameInput);
-            listItem.appendChild(deleteButton);
+            groupHeader.appendChild(groupNameInput);
+            groupHeader.appendChild(deleteButton);
+            listItem.appendChild(groupHeader);
             groupsList.appendChild(listItem);
+
+            handleGroupClick(listItem, group);
+            listItem.addEventListener("click", () => handleGroupClick(listItem, group));
         });
     });
+}
+
+function handleGroupClick(parent, group) {    
+    if(group.showDetails === true) {
+        group.showDetails = false;
+        const tabs = document.createElement("ul");
+        tabs.className = "tabs";
+        
+        group.tabs.forEach(tab => {
+            const tabItem = document.createElement("li");
+            tabItem.textContent = tab.title;
+            tabs.appendChild(tabItem);
+        });
+
+        parent.appendChild(tabs);
+    } else {
+        const tabs = parent.getElementsByClassName("tabs")[0];
+        if(tabs) {
+            parent.removeChild(tabs);
+        }
+        group.showDetails = true;
+    }
 }
 
 // Rename a group

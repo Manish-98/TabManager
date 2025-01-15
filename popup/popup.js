@@ -11,7 +11,7 @@ document.getElementById("saveTabsButton").addEventListener("click", async () => 
 
   chrome.storage.local.get("tabGroups", (data) => {
     const tabGroups = data.tabGroups || [];
-    tabGroups.push({ name: groupName, tabs: tabData });
+    tabGroups.push({ name: groupName, tabs: tabData, showDetails: false });
     chrome.storage.local.set({ tabGroups }, () => {
       alert("Group saved!");
       loadGroups();
