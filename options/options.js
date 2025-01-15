@@ -25,19 +25,19 @@ function loadGroups() {
             listItem.appendChild(groupHeader);
             groupsList.appendChild(listItem);
 
-            showTabs(listItem, group);
-            listItem.addEventListener("click", () => showTabs(listItem, group));
+            showTabs(listItem, group, index);
+            listItem.addEventListener("click", () => showTabs(listItem, group, index));
         });
     });
 }
 
-function showTabs(parent, group) {
+function showTabs(parent, group, groupIndex) {
     if (group.showDetails === true) {
         group.showDetails = false;
         const tabs = document.createElement("ul");
         tabs.className = "tabs";
 
-        group.tabs.forEach(tab => {
+        group.tabs.forEach((tab, tabIndex) => {
             const tabItem = document.createElement("li");
             tabItem.className = "tab-item";
 
@@ -45,12 +45,12 @@ function showTabs(parent, group) {
             tabTitle.textContent = tab.title;
             tabTitle.className = "tab-title";
 
-            const tabLink = document.createElement("div");
-            tabLink.textContent = tab.url;
-            tabLink.className = "tab-link";
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => deleteTab(tabIndex, groupIndex));
 
             tabItem.appendChild(tabTitle);
-            tabItem.appendChild(tabLink);
+            tabItem.appendChild(deleteButton);
             tabs.appendChild(tabItem);
         });
 
@@ -85,6 +85,18 @@ function deleteGroup(index) {
         chrome.storage.local.set({ tabGroups }, () => {
             loadGroups(); // Refresh the list
         });
+    });
+}
+
+function deleteTab(tabIndex, groupIndex) {
+    chrome.storage.local.get("tabGroups", (data) => {
+        const tabGroups = data.tabGroups || [];
+        if (tabGroups[groupIndex]) {
+            tabGroups[groupIndex].tabs.splice(tabIndex, 1);
+            chrome.storage.local.set({ tabGroups }, () => {
+                loadGroups();
+            });
+        }
     });
 }
 
