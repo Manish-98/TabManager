@@ -18,26 +18,34 @@ function loadGroups() {
 
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
+            deleteButton.className = "delete";
             deleteButton.addEventListener("click", () => deleteGroup(index));
+
+            const showTabsButton = document.createElement("button");
+            showTabsButton.textContent = "Tabs";
+            showTabsButton.className = "show-tabs";
+            showTabsButton.addEventListener("click", () => {
+                tabGroups[index].showDetails = !tabGroups[index].showDetails;
+                showTabs(listItem, tabGroups, index)
+            });
 
             groupHeader.appendChild(groupNameInput);
             groupHeader.appendChild(deleteButton);
+            groupHeader.appendChild(showTabsButton);
             listItem.appendChild(groupHeader);
             groupsList.appendChild(listItem);
 
-            showTabs(listItem, group, index);
-            listItem.addEventListener("click", () => showTabs(listItem, group, index));
+            showTabs(listItem, tabGroups, index);
         });
     });
 }
 
-function showTabs(parent, group, groupIndex) {
-    if (group.showDetails === true) {
-        group.showDetails = false;
+function showTabs(parent, groups, groupIndex) {
+    if (groups[groupIndex].showDetails === true) {
         const tabs = document.createElement("ul");
         tabs.className = "tabs";
 
-        group.tabs.forEach((tab, tabIndex) => {
+        groups[groupIndex].tabs.forEach((tab, tabIndex) => {
             const tabItem = document.createElement("li");
             tabItem.className = "tab-item";
 
@@ -47,6 +55,7 @@ function showTabs(parent, group, groupIndex) {
 
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
+            deleteButton.className = "delete";
             deleteButton.addEventListener("click", () => deleteTab(tabIndex, groupIndex));
 
             tabItem.appendChild(tabTitle);
@@ -60,8 +69,9 @@ function showTabs(parent, group, groupIndex) {
         if (tabs) {
             parent.removeChild(tabs);
         }
-        group.showDetails = true;
     }
+
+    chrome.storage.local.set({ tabGroups: groups });
 }
 
 // Rename a group

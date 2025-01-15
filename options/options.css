@@ -84,3 +84,11 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.delete {
+  background-color: #dc3545;
+}
+
+.delete:hover {
+  background-color: #bd2130;
+}
