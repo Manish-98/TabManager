@@ -1,3 +1,6 @@
+const deleteIconUrl = chrome.runtime.getURL('icons/delete.png');
+const tabsIconUrl = chrome.runtime.getURL('icons/tabs.png');
+
 function loadGroups() {
     chrome.storage.local.get("tabGroups", (data) => {
         const groupsList = document.getElementById("groupsList");
@@ -17,21 +20,37 @@ function loadGroups() {
             groupNameInput.addEventListener("change", () => renameGroup(index, groupNameInput.value));
 
             const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
             deleteButton.className = "delete";
+
+            const deleteIcon = document.createElement("img");
+            deleteIcon.src = deleteIconUrl;
+            deleteIcon.alt = "Delete";
+            deleteIcon.className = "icon";
+
+            deleteButton.appendChild(deleteIcon);
             deleteButton.addEventListener("click", () => deleteGroup(index));
 
             const showTabsButton = document.createElement("button");
-            showTabsButton.textContent = "Tabs";
             showTabsButton.className = "show-tabs";
+
+            const tabIcon = document.createElement("img");
+            tabIcon.src = tabsIconUrl;
+            tabIcon.alt = "Show Tabs";
+            tabIcon.className = "icon";
+
+            showTabsButton.appendChild(tabIcon);
             showTabsButton.addEventListener("click", () => {
                 tabGroups[index].showDetails = !tabGroups[index].showDetails;
                 showTabs(listItem, tabGroups, index)
             });
 
+            const groupActions = document.createElement("div");
+            groupActions.className = "group-actions";
+            groupActions.appendChild(deleteButton);
+            groupActions.appendChild(showTabsButton);
+
             groupHeader.appendChild(groupNameInput);
-            groupHeader.appendChild(deleteButton);
-            groupHeader.appendChild(showTabsButton);
+            groupHeader.appendChild(groupActions);
             listItem.appendChild(groupHeader);
             groupsList.appendChild(listItem);
 
@@ -54,8 +73,14 @@ function showTabs(parent, groups, groupIndex) {
             tabTitle.className = "tab-title";
 
             const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
             deleteButton.className = "delete";
+
+            const deleteIcon = document.createElement("img");
+            deleteIcon.src = deleteIconUrl;
+            deleteIcon.alt = "Delete";
+            deleteIcon.className = "icon";
+            deleteButton.appendChild(deleteIcon);
+
             deleteButton.addEventListener("click", () => deleteTab(tabIndex, groupIndex));
 
             tabItem.appendChild(tabTitle);
