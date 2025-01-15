@@ -1,5 +1,6 @@
-const deleteIconUrl = chrome.runtime.getURL('icons/delete.png');
-const tabsIconUrl = chrome.runtime.getURL('icons/tabs.png');
+const deleteIconUrl = chrome.runtime.getURL('icons/delete-red.png');
+const openIconUrl = chrome.runtime.getURL('icons/open-blue.png');
+const tabsIconUrl = chrome.runtime.getURL('icons/tabs-blue.png');
 
 function loadGroups() {
     chrome.storage.local.get("tabGroups", (data) => {
@@ -19,35 +20,25 @@ function loadGroups() {
             groupNameInput.value = group.name;
             groupNameInput.addEventListener("change", () => renameGroup(index, groupNameInput.value));
 
-            const deleteButton = document.createElement("button");
-            deleteButton.className = "delete";
-
             const deleteIcon = document.createElement("img");
             deleteIcon.src = deleteIconUrl;
             deleteIcon.alt = "Delete";
             deleteIcon.className = "icon";
-
-            deleteButton.appendChild(deleteIcon);
-            deleteButton.addEventListener("click", () => deleteGroup(index));
-
-            const showTabsButton = document.createElement("button");
-            showTabsButton.className = "show-tabs";
+            deleteIcon.addEventListener("click", () => deleteGroup(index));
 
             const tabIcon = document.createElement("img");
             tabIcon.src = tabsIconUrl;
             tabIcon.alt = "Show Tabs";
             tabIcon.className = "icon";
-
-            showTabsButton.appendChild(tabIcon);
-            showTabsButton.addEventListener("click", () => {
+            tabIcon.addEventListener("click", () => {
                 tabGroups[index].showDetails = !tabGroups[index].showDetails;
                 showTabs(listItem, tabGroups, index)
             });
 
             const groupActions = document.createElement("div");
             groupActions.className = "group-actions";
-            groupActions.appendChild(deleteButton);
-            groupActions.appendChild(showTabsButton);
+            groupActions.appendChild(deleteIcon);
+            groupActions.appendChild(tabIcon);
 
             groupHeader.appendChild(groupNameInput);
             groupHeader.appendChild(groupActions);
@@ -72,19 +63,25 @@ function showTabs(parent, groups, groupIndex) {
             tabTitle.textContent = tab.title;
             tabTitle.className = "tab-title";
 
-            const deleteButton = document.createElement("button");
-            deleteButton.className = "delete";
-
             const deleteIcon = document.createElement("img");
             deleteIcon.src = deleteIconUrl;
             deleteIcon.alt = "Delete";
             deleteIcon.className = "icon";
-            deleteButton.appendChild(deleteIcon);
+            deleteIcon.addEventListener("click", () => deleteTab(tabIndex, groupIndex));
 
-            deleteButton.addEventListener("click", () => deleteTab(tabIndex, groupIndex));
+            const openIcon = document.createElement("img");
+            openIcon.src = openIconUrl;
+            openIcon.alt = "Open";
+            openIcon.className = "icon";
+            openIcon.addEventListener("click", () => chrome.tabs.create({ url: tab.url }));
+
+            const tabActions = document.createElement("div");
+            tabActions.className = "tab-actions";
+            tabActions.appendChild(deleteIcon);
+            tabActions.appendChild(openIcon);
 
             tabItem.appendChild(tabTitle);
-            tabItem.appendChild(deleteButton);
+            tabItem.appendChild(tabActions);
             tabs.appendChild(tabItem);
         });
 
