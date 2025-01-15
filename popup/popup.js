@@ -1,4 +1,6 @@
-document.getElementById("settingsIcon").addEventListener("click", () => {
+const settings = document.getElementById("settingsIcon")
+settings.src = chrome.runtime.getURL("icons/settings.png");
+settings.addEventListener("click", () => {
   chrome.tabs.create({ url: "options/options.html" });
 });
 
