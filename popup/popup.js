@@ -12,7 +12,12 @@ document.getElementById("saveTabsButton").addEventListener("click", async () => 
   if (!groupName) return;
 
   const tabs = await chrome.tabs.query({});
-  const tabData = tabs.map(tab => ({ title: tab.title, url: tab.url }));
+  const groups = await chrome.tabGroups.query({});
+  const tabData = tabs.map(tab => {
+    const group = groups.find(group => group.id === tab.groupId);
+    const groupInfo = group ? { groupName: group.title, groupColor: group.color } : { groupName: 0 };
+    return { title: tab.title, url: tab.url, groupInfo };
+  });
 
   chrome.storage.local.get("tabGroups", (data) => {
     const tabGroups = data.tabGroups || [];
@@ -59,12 +64,33 @@ function loadGroups() {
 // Open all tabs in a group
 async function openGroup(tabs) {
   const openTabs = await chrome.tabs.query({});
+  const openGroups = await chrome.tabGroups.query({});
 
-  tabs.forEach(tab => {
-    if (!openTabs.some(openTab => openTab.url === tab.url)) {
-      chrome.tabs.create({ url: tab.url });
+  const groupedTabs = Map.groupBy(tabs, tab => tab.groupInfo.groupName);
+
+  for (const [groupName, group] of groupedTabs) {
+    const tabIds = [];
+
+    for (const tab of group) {
+      if (!openTabs.some(openTab => openTab.url === tab.url)) {
+        const newTab = await chrome.tabs.create({ url: tab.url, active: false });
+        tabIds.push(newTab.id);
+      }
+    };
+
+    if (groupName !== 0 && tabIds.length > 0) {
+      if (openGroups.some(openGroup => openGroup.title === groupName)) {
+        const existingGroup = openGroups.find(openGroup => openGroup.title === groupName);
+        chrome.tabs.group({ tabIds: tabIds, groupId: existingGroup.id }, (id) => {
+          chrome.tabGroups.update(id, { color: group[0].groupInfo.groupColor, title: group[0].groupInfo.groupName });
+        })
+      } else {
+        chrome.tabs.group({ tabIds: tabIds }, (id) => {
+          chrome.tabGroups.update(id, { color: group[0].groupInfo.groupColor, title: group[0].groupInfo.groupName });
+        });
+      }
     }
-  });
+  };
 }
 
 // Delete a group

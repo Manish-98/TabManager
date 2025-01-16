@@ -5,6 +5,7 @@
     "description": "Save, manage, and reopen groups of tabs with ease.",
     "permissions": [
         "tabs",
+        "tabGroups",
         "storage"
     ],
     "host_permissions": [
