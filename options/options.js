@@ -57,8 +57,18 @@ function showTabs(parent, groups, groupIndex) {
         tabs.className = "tabs";
 
         groups[groupIndex].tabs.forEach((tab, tabIndex) => {
+            const groupName = tab.groupInfo.groupName;
+
             const tabItem = document.createElement("li");
             tabItem.className = "tab-item";
+
+            const tabGroup = document.createElement("div");
+            tabGroup.className = "tab-group";
+            tabGroup.textContent = groupName;
+            tabGroup.style.backgroundColor = tab.groupInfo.groupColor;
+
+            const tabInfo = document.createElement("div");
+            tabInfo.className = "tab-info";
 
             const tabTitle = document.createElement("div");
             tabTitle.textContent = tab.title;
@@ -81,8 +91,10 @@ function showTabs(parent, groups, groupIndex) {
             tabActions.appendChild(deleteIcon);
             tabActions.appendChild(openIcon);
 
-            tabItem.appendChild(tabTitle);
-            tabItem.appendChild(tabActions);
+            tabInfo.appendChild(tabTitle);
+            tabInfo.appendChild(tabActions);
+            if (groupName !== 0) tabItem.appendChild(tabGroup);
+            tabItem.appendChild(tabInfo);
             tabs.appendChild(tabItem);
         });
 

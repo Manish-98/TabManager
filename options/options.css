@@ -49,18 +49,31 @@ h1 {
 }
 
 .tabs {
+  display: flex;
+  flex-direction: column;
   padding: 0;
+  gap: 5px;
 }
 
 .tab-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px;
-  margin: 5px 0;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.tab-group {
+  padding: 5px;
+  border-radius: 4px 0 0 4px;
+}
+
+.tab-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  padding-left: 5px;
+  width: 100%;
 }
 
 .group-name {
