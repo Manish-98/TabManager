@@ -23,14 +23,19 @@ h1 {
 #groupsList {
   list-style-type: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .group-item {
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  margin: 5px 0;
   gap: 10px;
+  flex-grow: 1;
+  height: fit-content;
+  width: 20rem;
+  padding: 10px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -44,8 +49,7 @@ h1 {
 }
 
 .tabs {
-  justify-content: space-between;
-  align-items: center;
+  padding: 0;
 }
 
 .tab-item {
@@ -59,8 +63,8 @@ h1 {
   border-radius: 5px;
 }
 
-#groupsList input {
-  margin-right: 10px;
+.group-name {
+  font-weight: bold;
 }
 
 #groupsList button {
@@ -79,6 +83,17 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.tab-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tab-actions {
+  display: flex;
+  margin-left: 5px;
 }
 
 button:hover {

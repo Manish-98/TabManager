@@ -16,6 +16,7 @@ function loadGroups() {
             groupHeader.className = "group-header";
 
             const groupNameInput = document.createElement("input");
+            groupNameInput.className = "group-name";
             groupNameInput.type = "text";
             groupNameInput.value = group.name;
             groupNameInput.addEventListener("change", () => renameGroup(index, groupNameInput.value));
