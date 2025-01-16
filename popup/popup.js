@@ -1,3 +1,6 @@
+const deleteIconUrl = chrome.runtime.getURL("icons/delete-red.png");
+const openIconUrl = chrome.runtime.getURL("icons/open-blue.png");
+
 const settings = document.getElementById("settingsIcon")
 settings.src = chrome.runtime.getURL("icons/settings.png");
 settings.addEventListener("click", () => {
@@ -33,18 +36,18 @@ function loadGroups() {
       const groupName = document.createElement("span");
       groupName.textContent = group.name;
 
-      const openButton = document.createElement("button");
-      openButton.textContent = "Open";
-      openButton.addEventListener("click", () => openGroup(group.tabs));
+      const openIcon = document.createElement("img");
+      openIcon.src = openIconUrl;
+      openIcon.addEventListener("click", () => openGroup(group.tabs));
 
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.addEventListener("click", () => deleteGroup(index));
+      const deleteIcon = document.createElement("img");
+      deleteIcon.src = deleteIconUrl;
+      deleteIcon.addEventListener("click", () => deleteGroup(index));
 
       const actionButtons = document.createElement("div");
       actionButtons.className = "action-buttons";
-      actionButtons.appendChild(openButton);
-      actionButtons.appendChild(deleteButton);
+      actionButtons.appendChild(deleteIcon);
+      actionButtons.appendChild(openIcon);
 
       listItem.appendChild(groupName);
       listItem.appendChild(actionButtons);
