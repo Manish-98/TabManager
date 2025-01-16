@@ -58,6 +58,14 @@ function loadGroups() {
       listItem.appendChild(actionButtons);
       groupsList.appendChild(listItem);
     });
+
+    if (tabGroups.length === 0) {
+      const emptyMessage = document.createElement("div");
+      emptyMessage.id = "empty-message";
+      emptyMessage.textContent = "No groups saved yet!";
+      groupsList.appendChild(emptyMessage);
+    }
+
   });
 }
 

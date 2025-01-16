@@ -77,3 +77,8 @@ button:hover {
 #groupsList button:hover {
   background-color: #cc0000;
 }
+
+#empty-message {
+  text-align: center;
+  margin-top: 10px;
+}
