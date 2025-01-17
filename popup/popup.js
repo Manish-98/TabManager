@@ -24,52 +24,55 @@ document.getElementById("saveTabsButton").addEventListener("click", async () => 
     tabGroups.push({ name: groupName, tabs: tabData, showDetails: false });
     chrome.storage.local.set({ tabGroups }, () => {
       alert("Group saved!");
-      loadGroups();
+      loadGroups(tabGroups);
     });
   });
 });
 
-function loadGroups() {
+document.getElementById("searchInput").addEventListener("input", (event) => {
   chrome.storage.local.get("tabGroups", (data) => {
-    const groupsList = document.getElementById("groupsList");
-    groupsList.innerHTML = ""; // Clear existing list
-
     const tabGroups = data.tabGroups || [];
-    tabGroups.forEach((group, index) => {
-      const listItem = document.createElement("li");
-
-      const groupName = document.createElement("span");
-      groupName.textContent = group.name;
-
-      const openIcon = document.createElement("img");
-      openIcon.src = openIconUrl;
-      openIcon.addEventListener("click", () => openGroup(group.tabs));
-
-      const deleteIcon = document.createElement("img");
-      deleteIcon.src = deleteIconUrl;
-      deleteIcon.addEventListener("click", () => deleteGroup(index));
-
-      const actionButtons = document.createElement("div");
-      actionButtons.className = "action-buttons";
-      actionButtons.appendChild(deleteIcon);
-      actionButtons.appendChild(openIcon);
-
-      listItem.appendChild(groupName);
-      listItem.appendChild(actionButtons);
-      groupsList.appendChild(listItem);
-    });
-
-    if (tabGroups.length === 0) {
-      const emptyMessage = document.createElement("div");
-      emptyMessage.id = "empty-message";
-      emptyMessage.textContent = "No groups saved yet!";
-      groupsList.appendChild(emptyMessage);
-    }
-
+    const searchValue = event.target.value.toLowerCase();
+    const filteredGroups = tabGroups.filter(group => group.name.toLowerCase().includes(searchValue));
+    loadGroups(filteredGroups);
   });
+});
+
+function loadGroups(tabGroups) {
+  const groupsList = document.getElementById("groupsList");
+  groupsList.innerHTML = "";
+  tabGroups.forEach((group, index) => {
+    const listItem = document.createElement("li");
+
+    const groupName = document.createElement("span");
+    groupName.textContent = group.name;
+
+    const openIcon = document.createElement("img");
+    openIcon.src = openIconUrl;
+    openIcon.addEventListener("click", () => openGroup(group.tabs));
+
+    const deleteIcon = document.createElement("img");
+    deleteIcon.src = deleteIconUrl;
+    deleteIcon.addEventListener("click", () => deleteGroup(index));
+
+    const actionButtons = document.createElement("div");
+    actionButtons.className = "action-buttons";
+    actionButtons.appendChild(deleteIcon);
+    actionButtons.appendChild(openIcon);
+
+    listItem.appendChild(groupName);
+    listItem.appendChild(actionButtons);
+    groupsList.appendChild(listItem);
+  });
+
+  if (tabGroups.length === 0) {
+    const emptyMessage = document.createElement("div");
+    emptyMessage.id = "empty-message";
+    emptyMessage.textContent = "No groups saved yet!";
+    groupsList.appendChild(emptyMessage);
+  }
 }
 
-// Open all tabs in a group
 async function openGroup(tabs) {
   const openTabs = await chrome.tabs.query({});
   const openGroups = await chrome.tabGroups.query({});
@@ -107,10 +110,9 @@ function deleteGroup(index) {
     const tabGroups = data.tabGroups || [];
     tabGroups.splice(index, 1);
     chrome.storage.local.set({ tabGroups }, () => {
-      loadGroups(); // Refresh the list
+      loadGroups(tabGroups);
     });
   });
 }
 
-// Load groups on popup open
-loadGroups();
+chrome.storage.local.get("tabGroups", (data) => loadGroups(data.tabGroups || []));

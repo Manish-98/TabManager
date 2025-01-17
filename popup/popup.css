@@ -17,6 +17,12 @@ body {
   align-items: center;
 }
 
+#savedGroupsSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 h1 {
   font-size: 18px;
   text-align: center;
