@@ -19,11 +19,15 @@ Tab Group Manager is a productivity-focused Chrome extension that helps you orga
 	- Perform available actions
 		- ![](icons/open-blue.png) - Open all tabs in a group
 		- ![](icons/delete-red.png) - Delete tab group
-3. View details of created tab groups
+3. Search for saved tab groups
+	- Open th extension popup
+	- In the search box (beside `Saved Groups`), enter the group name
+	- View all saved groups which contained the entered phrase
+4. View details of created tab groups
 	- Open the extension popup
 	- Click on the ![](icons/settings.png) icon to view additional details of the created tab groups
 	- Click on ![](icons/tabs-blue.png) icon to view all tabs inside any tab group
-4. Managing tabs inside a created group
+5. Managing tabs inside a created group
 	- Open additional details of created tab groups
 	- Click on ![](icons/tabs-blue.png) icon to view all tabs inside any tab group
 	- Perform available actions on individual tabs
