@@ -28,6 +28,10 @@ function loadGroups(tabGroups) {
         groupNameInput.value = group.name;
         groupNameInput.addEventListener("change", () => renameGroup(index, groupNameInput.value));
 
+        const groupDetails = document.createElement("div");
+        groupDetails.className = "group-details";
+        groupDetails.textContent = `${group.tabs.length} tabs`;
+
         const deleteIcon = document.createElement("img");
         deleteIcon.src = deleteIconUrl;
         deleteIcon.alt = "Delete";
@@ -40,7 +44,7 @@ function loadGroups(tabGroups) {
         tabIcon.className = "icon";
         tabIcon.addEventListener("click", () => {
             tabGroups[index].showDetails = !tabGroups[index].showDetails;
-            showTabs(listItem, tabGroups, index)
+            chrome.storage.local.set({ tabGroups }, () => showTabs(listItem, tabGroups, index));
         });
 
         const groupActions = document.createElement("div");
@@ -49,10 +53,10 @@ function loadGroups(tabGroups) {
         groupActions.appendChild(tabIcon);
 
         groupHeader.appendChild(groupNameInput);
+        groupHeader.appendChild(groupDetails);
         groupHeader.appendChild(groupActions);
         listItem.appendChild(groupHeader);
         groupsList.appendChild(listItem);
-
         showTabs(listItem, tabGroups, index);
     });
 
@@ -150,7 +154,7 @@ function deleteTab(tabIndex, groupIndex) {
         if (tabGroups[groupIndex]) {
             tabGroups[groupIndex].tabs.splice(tabIndex, 1);
             chrome.storage.local.set({ tabGroups }, () => {
-                loadGroups();
+                loadGroups(tabGroups);
             });
         }
     });

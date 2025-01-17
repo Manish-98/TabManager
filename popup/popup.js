@@ -21,7 +21,11 @@ document.getElementById("saveTabsButton").addEventListener("click", async () => 
 
   chrome.storage.local.get("tabGroups", (data) => {
     const tabGroups = data.tabGroups || [];
-    tabGroups.push({ name: groupName, tabs: tabData, showDetails: false });
+    if(tabGroups.some(group => group.name === groupName)) {
+      alert("Group name unavailable, please choose another name.");
+      return;
+    }
+    tabGroups.push({ name: groupName, tabs: tabData, showDetails: false, createdAt: new Date().toISOString(), lastUsed: new Date().toISOString(), frequency: 0 });
     chrome.storage.local.set({ tabGroups }, () => {
       alert("Group saved!");
       loadGroups(tabGroups);
@@ -49,7 +53,11 @@ function loadGroups(tabGroups) {
 
     const openIcon = document.createElement("img");
     openIcon.src = openIconUrl;
-    openIcon.addEventListener("click", () => openGroup(group.tabs));
+    openIcon.addEventListener("click", () => {
+      tabGroups[index].frequency++;
+      tabGroups[index].lastUsed = new Date().toISOString();
+      chrome.storage.local.set({ tabGroups }, () => openGroup(group.tabs));
+    });
 
     const deleteIcon = document.createElement("img");
     deleteIcon.src = deleteIconUrl;
