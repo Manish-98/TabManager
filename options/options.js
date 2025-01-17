@@ -2,60 +2,66 @@ const deleteIconUrl = chrome.runtime.getURL('icons/delete-red.png');
 const openIconUrl = chrome.runtime.getURL('icons/open-blue.png');
 const tabsIconUrl = chrome.runtime.getURL('icons/tabs-blue.png');
 
-function loadGroups() {
+document.getElementById("searchInput").addEventListener("input", (event) => {
     chrome.storage.local.get("tabGroups", (data) => {
-        const groupsList = document.getElementById("groupsList");
-        groupsList.innerHTML = "";
-
         const tabGroups = data.tabGroups || [];
-        tabGroups.forEach((group, index) => {
-            const listItem = document.createElement("li");
-            listItem.className = "group-item";
+        const searchValue = event.target.value.toLowerCase();
+        const filteredGroups = tabGroups.filter(group => group.name.toLowerCase().includes(searchValue));
+        loadGroups(filteredGroups);
+    });
+});
 
-            const groupHeader = document.createElement("div");
-            groupHeader.className = "group-header";
+function loadGroups(tabGroups) {
+    const groupsList = document.getElementById("groupsList");
+    groupsList.innerHTML = "";
 
-            const groupNameInput = document.createElement("input");
-            groupNameInput.className = "group-name";
-            groupNameInput.type = "text";
-            groupNameInput.value = group.name;
-            groupNameInput.addEventListener("change", () => renameGroup(index, groupNameInput.value));
+    tabGroups.forEach((group, index) => {
+        const listItem = document.createElement("li");
+        listItem.className = "group-item";
 
-            const deleteIcon = document.createElement("img");
-            deleteIcon.src = deleteIconUrl;
-            deleteIcon.alt = "Delete";
-            deleteIcon.className = "icon";
-            deleteIcon.addEventListener("click", () => deleteGroup(index));
+        const groupHeader = document.createElement("div");
+        groupHeader.className = "group-header";
 
-            const tabIcon = document.createElement("img");
-            tabIcon.src = tabsIconUrl;
-            tabIcon.alt = "Show Tabs";
-            tabIcon.className = "icon";
-            tabIcon.addEventListener("click", () => {
-                tabGroups[index].showDetails = !tabGroups[index].showDetails;
-                showTabs(listItem, tabGroups, index)
-            });
+        const groupNameInput = document.createElement("input");
+        groupNameInput.className = "group-name";
+        groupNameInput.type = "text";
+        groupNameInput.value = group.name;
+        groupNameInput.addEventListener("change", () => renameGroup(index, groupNameInput.value));
 
-            const groupActions = document.createElement("div");
-            groupActions.className = "group-actions";
-            groupActions.appendChild(deleteIcon);
-            groupActions.appendChild(tabIcon);
+        const deleteIcon = document.createElement("img");
+        deleteIcon.src = deleteIconUrl;
+        deleteIcon.alt = "Delete";
+        deleteIcon.className = "icon";
+        deleteIcon.addEventListener("click", () => deleteGroup(index));
 
-            groupHeader.appendChild(groupNameInput);
-            groupHeader.appendChild(groupActions);
-            listItem.appendChild(groupHeader);
-            groupsList.appendChild(listItem);
-
-            showTabs(listItem, tabGroups, index);
+        const tabIcon = document.createElement("img");
+        tabIcon.src = tabsIconUrl;
+        tabIcon.alt = "Show Tabs";
+        tabIcon.className = "icon";
+        tabIcon.addEventListener("click", () => {
+            tabGroups[index].showDetails = !tabGroups[index].showDetails;
+            showTabs(listItem, tabGroups, index)
         });
 
-        if (tabGroups.length === 0) {
-            const emptyMessage = document.createElement("div");
-            emptyMessage.id = "empty-message";
-            emptyMessage.textContent = "No groups saved yet!";
-            groupsList.appendChild(emptyMessage);
-        }
+        const groupActions = document.createElement("div");
+        groupActions.className = "group-actions";
+        groupActions.appendChild(deleteIcon);
+        groupActions.appendChild(tabIcon);
+
+        groupHeader.appendChild(groupNameInput);
+        groupHeader.appendChild(groupActions);
+        listItem.appendChild(groupHeader);
+        groupsList.appendChild(listItem);
+
+        showTabs(listItem, tabGroups, index);
     });
+
+    if (tabGroups.length === 0) {
+        const emptyMessage = document.createElement("div");
+        emptyMessage.id = "empty-message";
+        emptyMessage.textContent = "No groups saved yet!";
+        groupsList.appendChild(emptyMessage);
+    }
 }
 
 function showTabs(parent, groups, groupIndex) {
@@ -112,8 +118,6 @@ function showTabs(parent, groups, groupIndex) {
             parent.removeChild(tabs);
         }
     }
-
-    chrome.storage.local.set({ tabGroups: groups });
 }
 
 // Rename a group
@@ -135,7 +139,7 @@ function deleteGroup(index) {
         const tabGroups = data.tabGroups || [];
         tabGroups.splice(index, 1);
         chrome.storage.local.set({ tabGroups }, () => {
-            loadGroups(); // Refresh the list
+            loadGroups(tabGroups);
         });
     });
 }
@@ -153,4 +157,4 @@ function deleteTab(tabIndex, groupIndex) {
 }
 
 // Load groups on page load
-loadGroups();
+chrome.storage.local.get("tabGroups", (data) => loadGroups(data.tabGroups || []));

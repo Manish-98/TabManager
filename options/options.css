@@ -20,6 +20,12 @@ h1 {
   margin-top: 10px;
 }
 
+#savedGroupsSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 #groupsList {
   list-style-type: none;
   padding: 0;
